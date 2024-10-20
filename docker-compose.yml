@@ -1,0 +1,53 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres_container
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - my_network
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq_container
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmqdata:/var/lib/rabbitmq
+    networks:
+      - my_network
+
+  app:
+    build: ./
+    container_name: java_app
+    environment:
+      DB_USERNAME: admin
+      DB_PASSWORD: admin
+      RABBIT_USERNAME: admin
+      RABBIT_PASSWORD: admin
+      JWT_SECRET: secret
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - rabbitmq
+    networks:
+      - my_network
+
+volumes:
+  pgdata:
+  rabbitmqdata:
+
+networks:
+  my_network:
+    driver: bridge
