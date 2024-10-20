@@ -1,0 +1,26 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: bank
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate:
+        default_schema: bank
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.sql
+    default_schema: bank
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: ${RABBIT_USERNAME}
+    password: ${RABBIT_PASSWORD}
+
+
+jwt:
+  secret: ${JWT_SECRET}
